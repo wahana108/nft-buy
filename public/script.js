@@ -160,4 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
       loadNFTs(e.target.value);
     });
   }
+  // Logika untuk tombol Back (dipisahkan)
+  const backButton = document.getElementById('back-to-mastermind');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      window.location.href = 'https://nft-main-bice.vercel.app/';
+    });
+  }
+
 });
