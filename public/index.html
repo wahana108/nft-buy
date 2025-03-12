@@ -6,8 +6,27 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.jsdelivr.net 'sha256-A+U6zxnSCDAzBEu4t9rUQCG7bCOVC5l/vVmm8nV5izA=';">
+  <!-- Tambahkan di dalam <head> untuk CSS -->
+<style>
+  .back-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px;
+  }
+  .back-button:hover {
+    background-color: #0056b3;
+  }
+</style>
 </head>
 <body>
+  <!-- Tambahkan di dalam <body>, tepat setelah tag pembuka <body> -->
+<div style="text-align: center;">
+  <button class="back-button" onclick="window.location.href='https://nft-mastermind.vercel.app'">Back</button>
+</div>
   <div id="login-form">
     <h2>Login</h2>
     <input type="email" id="email" placeholder="Email" autocomplete="email"><br>
