@@ -1,5 +1,5 @@
 console.log('script.js loaded');
-const supabase = window.supabase.createClient('https://jmqwuaybvruzxddsppdh.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcXd1YXlidnJ1enhkZHNwcGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0MTUxNzEsImV4cCI6MjA1NTk5MTE3MX0.ldNdOrsb4BWyFRwZUqIFEbmU0SgzJxiF_Z7eGZPKZJg');
+const supabase = window.supabase.createClient('https://oqquvpjikdbjlagdlbhp.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xcXV2cGppa2RiamxhZ2RsYmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5NTE4MDgsImV4cCI6MjA2MDUyNzgwOH0.ec28Q9VqiW2FomXESxVkiYswtWe6kJS-Vpc7W_tMsuU'); // Dari Supabase Dashboard > Settings > API > anon public
 let token;
 
 async function login() {
@@ -33,16 +33,17 @@ async function register() {
     const password = document.getElementById('reg-password').value;
     console.log('Attempting register with:', { email, password });
     if (!email || !password) throw new Error('Email and password are required');
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
-    if (error) throw error;
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText);
+    }
+    const data = await res.json();
     console.log('Registration successful:', data);
-    const { error: insertError } = await supabase
-      .from('users_registered')
-      .insert({ user_id: data.user.id, email, registered_at: new Date().toISOString() });
-    if (insertError) throw insertError;
     alert('Registration successful! Please login.');
     document.getElementById('register-form').style.display = 'none';
     document.getElementById('login-form').style.display = 'block';
@@ -61,12 +62,9 @@ async function loadNFTs(searchQuery = '') {
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
     const nfts = await res.json();
     console.log('NFTs loaded:', nfts);
-
-    // Filter NFT berdasarkan pencarian
     const filteredNfts = searchQuery
       ? nfts.filter(nft => nft.title.toLowerCase().includes(searchQuery.toLowerCase()))
       : nfts;
-
     const list = document.getElementById('nft-list');
     list.innerHTML = '';
     if (filteredNfts.length === 0) {
@@ -108,7 +106,7 @@ async function buyNFT(nftId) {
     if (!res.ok) throw new Error(`Buy failed: ${res.status}`);
     console.log('NFT bought');
     alert('NFT bought successfully!');
-    loadNFTs(document.getElementById('nft-search').value); // Reload dengan query pencarian
+    loadNFTs(document.getElementById('nft-search').value);
   } catch (error) {
     console.error('Error buying NFT:', error.message);
     alert('Error: ' + error.message);
@@ -152,20 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('login-form').style.display = 'block';
     });
   }
-
-  // Event listener untuk input pencarian
   const searchInput = document.getElementById('nft-search');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       loadNFTs(e.target.value);
     });
   }
-  // Logika untuk tombol Back (dipisahkan)
   const backButton = document.getElementById('back-to-mastermind');
   if (backButton) {
     backButton.addEventListener('click', () => {
-      window.location.href = 'https://nft-main-bice.vercel.app/';
+      window.location.href = 'https://nft-main-bice.vercel.app'; // Sementara ke website pertama
     });
   }
-
 });
